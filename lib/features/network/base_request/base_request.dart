@@ -7,7 +7,7 @@ enum RequestMethod { get, post, put, delete }
 class BaseRequest {
   BaseRequest._();
 
-  void initalize(String apiUrl) {
+  static void initalize(String apiUrl) {
     _apiUrl = apiUrl;
   }
 
