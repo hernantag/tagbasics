@@ -1,3 +1,7 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+- Copia inicial.
+
+## 0.1.0
+
+- Agregado boton principal
