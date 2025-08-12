@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:tagbasics/features/error_handler/error_ui_handler.dart';
 
 enum RequestMethod { get, post, put, delete }
@@ -7,17 +6,23 @@ enum RequestMethod { get, post, put, delete }
 class BaseRequest {
   BaseRequest._();
 
-  static void initalize(String apiUrl) {
+  static void setApiBaseUrl(String apiUrl) {
     _apiUrl = apiUrl;
+  }
+
+  static void setAuthorization(String token) {
+    _authToken = token;
   }
 
   static final Dio _dio = Dio();
   static final BaseRequest instance = BaseRequest._();
   static const ErrorLevel _errorLevel = ErrorLevel.baseRequest;
   static String? _apiUrl;
+  static String? _authToken;
 
   static bool get isInitialized => _apiUrl != null;
   static String? get apiUrl => _apiUrl;
+  static String? get authToken => _authToken;
 
   static Future<Response> baseRequest<T>(
     String url, {
@@ -90,27 +95,9 @@ class BaseRequest {
       }
     }
     if (auth) {
-      defaultHeaders["Authorization"] = "Bearer ${await _getSesionLocal()}";
+      defaultHeaders["Authorization"] = "Bearer $authToken";
     }
     return defaultHeaders;
-  }
-
-  static Future<String> _getSesionLocal() async {
-    try {
-      final Box box = Hive.box("local");
-
-      bool existeSesion = box.containsKey("sesion");
-
-      if (existeSesion) {
-        final Map sesionJson = box.get("sesion");
-        final token = sesionJson["access_token"];
-        return token;
-      } else {
-        return "";
-      }
-    } catch (e) {
-      throw CustomException(cause: ErrorHandler.parseError(_errorLevel, e));
-    }
   }
 }
 
