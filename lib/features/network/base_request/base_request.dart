@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:tagbasics/features/error_handler/error_ui_handler.dart';
 
-enum RequestMethod { get, post, put, delete }
+enum RequestMethod { get, post, put, delete, patch }
 
 class BaseRequest {
   BaseRequest._();
@@ -66,6 +66,14 @@ class BaseRequest {
 
         case RequestMethod.delete:
           respuesta = await _dio.delete(
+            urlFull,
+            data: multipart && body != null ? FormData.fromMap(body) : body,
+            options: dioOptions,
+          );
+          break;
+
+        case RequestMethod.patch:
+          respuesta = await _dio.patch(
             urlFull,
             data: multipart && body != null ? FormData.fromMap(body) : body,
             options: dioOptions,
